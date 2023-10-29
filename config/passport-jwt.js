@@ -1,11 +1,12 @@
-
+require("dotenv").config()
 const passport =require('passport');
+
 const JwtStrategy = require('passport-jwt').Strategy;
  const   ExtractJwt = require('passport-jwt').ExtractJwt;
  const User=require('../model/Doctors');
  let opt={
     jwtFromRequest:ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey:'codial'
+    secretOrKey:process.env.JWT_KEY
  }
  passport.use(new JwtStrategy(opt,function(jwtpayload,done){
       User.findById(jwtpayload._id,function(err,user){

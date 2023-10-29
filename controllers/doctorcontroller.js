@@ -1,5 +1,6 @@
 const Doctor=require('../model/Doctors');
 const Paitent=require('../model/Patient');
+require("dotenv").config();
 const jwt=require('jsonwebtoken');
 
 //doctor sign up page
@@ -85,7 +86,7 @@ module.exports.creteSession = async function (req, res) {
                 message: "Email or password do not match"
             });
         } else {
-            const token = jwt.sign({ userId: user._id }, 'yourSecretKey', { expiresIn: '1h' });
+            const token = jwt.sign({ userId: user._id }, process.env.JWT_KEY, { expiresIn: '1h' });
 
             res.status(200).json({
                 message: "Sign in successful. Here is your token. Please keep it safe.",
@@ -104,9 +105,10 @@ module.exports.creteSession = async function (req, res) {
     }
 }
 
+//register ptient controller
 module.exports.registerPatient=async (req,res)=>{
     try{
-        req.body.doctors="653e2213e839f6489bac8d24"
+        req.body.doctors="653e2e91b1eadb2cced8e402"
         const patient=await  Paitent.create(req.body);
         res.status(200).json({
             success:true,
@@ -119,7 +121,7 @@ module.exports.registerPatient=async (req,res)=>{
         })
     }
 }
-
+//patient report creaate controller
 module.exports.createReport=async function(req,res){
     try{
         const paitent=await Paitent.findById(req.params.id);
@@ -154,10 +156,11 @@ module.exports.all_reports=async function(req,res){
         })
     }
 }
+//pathient report finding controller
 
 module.exports.allReports=async function(req,res){
     try{
-        console.log(req.params.status)
+      
         const patient=await Paitent.find({ reports :{ $elemMatch: {status:req.body.status}},});
         console.log( patient)
         
